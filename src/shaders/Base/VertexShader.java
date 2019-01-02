@@ -1,4 +1,4 @@
-package shaders.Base;
+package shaders.base;
 
 import com.jogamp.opengl.GL4;
 

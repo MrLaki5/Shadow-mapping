@@ -1,4 +1,4 @@
-package shaders.Base;
+package shaders.base;
 
 
 import java.nio.ByteBuffer;
@@ -100,7 +100,7 @@ public class ShaderProgram {
         gl.glUseProgram(programID);
     }
 
-    public static void deactivate(GL4 gl) {
+    public void deactivate(GL4 gl) {
         gl.glUseProgram(0);
     }
 

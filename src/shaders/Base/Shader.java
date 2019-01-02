@@ -1,4 +1,4 @@
-package shaders.Base;
+package shaders.base;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
