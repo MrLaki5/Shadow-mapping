@@ -4,4 +4,4 @@
 * Perspective camera which can zoom in and zoom out scene and rotate around it.
 * Shadow acne removed with shadow bias and normal shadow bias value.
 * Aliasing of shadows removed with PCF method.
-* JOGL, java binding for the OpenGL API used. [Link](http://jogamp.org/ "JOML")
+* JOGL, java binding for the OpenGL API used. [Link](http://jogamp.org/ "JOGL")
