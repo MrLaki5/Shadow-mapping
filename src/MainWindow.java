@@ -65,13 +65,23 @@ public class MainWindow implements GLEventListener, KeyListener {
 
         Box box1 = new Box();
         box1.setShaderProgram(objectShader);
-        box1.setTransform(new Matrix4f().identity().translate(1, 0.5f ,0));
+        box1.setTransform(new Matrix4f().identity().translate(1, 0.5f ,2));
         objectList.add(box1);
 
         Box box2 = new Box();
         box2.setShaderProgram(objectShader);
-        box2.setTransform(new Matrix4f().identity().translate(-1, 0.5f, 0).rotate((float)Math.toRadians(30), 0, 1, 0));
+        box2.setTransform(new Matrix4f().identity().translate(-1, 0.5f, 1).rotate((float)Math.toRadians(30), 0, 1, 0));
         objectList.add(box2);
+
+        Box box3 = new Box();
+        box3.setShaderProgram(objectShader);
+        box3.setTransform(new Matrix4f().identity().scale(0.8f, 0.8f, 0.8f).translate(2.5f, 1.5f, -2.5f).rotate((float)Math.toRadians(25), 0, 1, 0).rotate((float)Math.toRadians(45), 1, 0, 1));
+        objectList.add(box3);
+
+        Box box4 = new Box();
+        box4.setShaderProgram(objectShader);
+        box4.setTransform(new Matrix4f().identity().translate(-2, 2f, -3).rotate((float)Math.toRadians(10), 0, 1, 0));
+        objectList.add(box4);
 
         Floor floor = new Floor();
         floor.setShaderProgram(objectShader);
