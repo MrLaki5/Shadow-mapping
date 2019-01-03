@@ -7,14 +7,22 @@ import shaders.complete.CompleteShader;
 
 public abstract class SimpleObject {
     protected CompleteShader shader;
-    protected Matrix4f transform = new Matrix4f();
+    protected Matrix4f transform;
     public abstract void init(GL4 gl);
     public abstract void render(GL4 gl, Camera c);
     public abstract void destroy(GL4 gl);
     public abstract void update();
 
+    public SimpleObject(){
+        transform = new Matrix4f().identity();
+    }
+
     public Matrix4f GetTransform() {
         return transform;
+    }
+
+    public void setTransform(Matrix4f transform){
+        this.transform = transform;
     }
 
     public void setShaderProgram(CompleteShader sp) {

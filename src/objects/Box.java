@@ -18,6 +18,10 @@ public class Box extends SimpleObject{
     private int vertexIndexBufferID;
     private float VPMatrixArr[] = new float[16];
 
+    public Box(){
+        super();
+    }
+
     private Vector3f makeVector(float []vertexPositions, int idx1, int idx2)
     {
         Vector3f vec = new Vector3f();
@@ -52,10 +56,11 @@ public class Box extends SimpleObject{
         shader.bindProgram(gl);
         gl.glBindVertexArray(vertexArrayID);
 
-        int VPMatrix = gl.glGetUniformLocation(shader.getProgramID(), "transform");
+        int VPMatrixLoc = gl.glGetUniformLocation(shader.getProgramID(), "transform");
         Matrix4f vpMat = c.getViewProjection();
+        vpMat.mul(transform);
         vpMat.get(VPMatrixArr);
-        gl.glUniformMatrix4fv(VPMatrix, 1, false, VPMatrixArr, 0);
+        gl.glUniformMatrix4fv(VPMatrixLoc, 1, false, VPMatrixArr, 0);
         gl.glDrawElements(GL4.GL_QUADS, 24, GL4.GL_UNSIGNED_INT, 0);
 
         shader.unbindProgram(gl);
