@@ -6,12 +6,14 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.FPSAnimator;
+import image.PNGLoader;
 import objects.Box;
 import objects.Floor;
 import objects.SimpleObject;
 import org.joml.Matrix4f;
 import shaders.complete.ObjectShader;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class MainWindow implements GLEventListener, KeyListener {
     private Camera camera;
     private float width = 800;
     private float height = 600;
+
+    private final int textureID[] = new int [2];
 
     private ObjectShader objectShader;
 
@@ -38,6 +42,7 @@ public class MainWindow implements GLEventListener, KeyListener {
         GLCapabilities caps = new GLCapabilities(glp);
         caps.setAlphaBits(8);
         caps.setDepthBits(24);
+        caps.setDoubleBuffered(true);
         GLWindow window = GLWindow.create(caps);
 
         animator = new FPSAnimator(window, 60, true);
@@ -63,31 +68,36 @@ public class MainWindow implements GLEventListener, KeyListener {
         GL4 gl = drawable.getGL().getGL4bc();
         objectShader = new ObjectShader(gl);
 
+        PNGLoader pngLoader = new PNGLoader();
+        pngLoader.LoadGLTexture(drawable, "img/wood.png", textureID, 0, GL.GL_LINEAR, GL.GL_LINEAR);
+        pngLoader.LoadGLTexture(drawable, "img/sand.png", textureID, 1, GL.GL_LINEAR, GL.GL_LINEAR);
+
         Box box1 = new Box();
         box1.setShaderProgram(objectShader);
         box1.setTransform(new Matrix4f().identity().translate(1, 0.5f ,2));
-        objectList.add(box1);
+        //objectList.add(box1);
 
         Box box2 = new Box();
         box2.setShaderProgram(objectShader);
         box2.setTransform(new Matrix4f().identity().translate(-1, 0.5f, 1).rotate((float)Math.toRadians(30), 0, 1, 0));
-        objectList.add(box2);
+        //objectList.add(box2);
 
         Box box3 = new Box();
         box3.setShaderProgram(objectShader);
         box3.setTransform(new Matrix4f().identity().scale(0.8f, 0.8f, 0.8f).translate(2.5f, 1.5f, -2.5f).rotate((float)Math.toRadians(25), 0, 1, 0).rotate((float)Math.toRadians(45), 1, 0, 1));
-        objectList.add(box3);
+        //objectList.add(box3);
 
         Box box4 = new Box();
         box4.setShaderProgram(objectShader);
         box4.setTransform(new Matrix4f().identity().translate(-2, 2f, -3).rotate((float)Math.toRadians(10), 0, 1, 0));
-        objectList.add(box4);
+        //objectList.add(box4);
 
         Floor floor = new Floor();
+        floor.setTextureID(textureID[1]);
         floor.setShaderProgram(objectShader);
         objectList.add(floor);
 
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        gl.glClearColor(0.85f, 0.85f, 0.85f, 1f);
         gl.glEnable(GL4.GL_DEPTH_TEST);
 
         for(int i=0; i<objectList.size(); i++){
@@ -102,6 +112,7 @@ public class MainWindow implements GLEventListener, KeyListener {
             objectList.get(i).destroy(gl);
         }
         objectShader.deleteShader(gl);
+        gl.glDeleteTextures(textureID.length, IntBuffer.wrap(textureID));
     }
 
     @Override

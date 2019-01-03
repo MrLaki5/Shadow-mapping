@@ -8,6 +8,7 @@ import shaders.complete.CompleteShader;
 public abstract class SimpleObject {
     protected CompleteShader shader;
     protected Matrix4f transform;
+    protected int textureID;
     public abstract void init(GL4 gl);
     public abstract void render(GL4 gl, Camera c);
     public abstract void destroy(GL4 gl);
@@ -31,5 +32,9 @@ public abstract class SimpleObject {
 
     public CompleteShader getShaderProgram() {
         return shader;
+    }
+
+    public void setTextureID(int textureID) {
+        this.textureID = textureID;
     }
 }

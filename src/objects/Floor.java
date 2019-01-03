@@ -94,12 +94,19 @@ public class Floor extends SimpleObject {
 
         shader.bindProgram(gl);
         gl.glBindVertexArray(vertexArrayID);
+        gl.glActiveTexture(textureID);
 
         int VPMatrixLoc = gl.glGetUniformLocation(shader.getProgramID(), "transform");
+        int texMapLoc = gl.glGetUniformLocation(shader.getProgramID(), "texMap");
         Matrix4f vpMat = c.getViewProjection();
         vpMat.mul(transform);
         vpMat.get(VPMatrixArr);
         gl.glUniformMatrix4fv(VPMatrixLoc, 1, false, VPMatrixArr, 0);
+        gl.glUniform1i(texMapLoc, 0);
+
+        gl.glActiveTexture(GL4.GL_TEXTURE0);
+        gl.glBindTexture(GL4.GL_TEXTURE_2D, textureID);
+
         gl.glDrawElements(GL4.GL_QUADS, 4, GL4.GL_UNSIGNED_INT, 0);
 
         shader.unbindProgram(gl);

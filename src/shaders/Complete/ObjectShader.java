@@ -20,9 +20,11 @@ public class ObjectShader extends CompleteShader{
             "#version 430\n" +
             "in vec4 interpolatedVertexColor;\n" +
             "out vec4 outColor;\n" +
+            "uniform sampler2D texMap;\n" +
             "void main()\n" +
             "{\n" +
-            "outColor = interpolatedVertexColor;\n" +
+            "vec2 temp = vec2(0.0f, 0.0f);"+
+            "outColor = texture(texMap, gl_SamplePosition);\n" +
             "}\n";
 
     public static final String geometrySrc = "";
