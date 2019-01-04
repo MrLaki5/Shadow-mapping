@@ -26,21 +26,26 @@ public class Floor extends SimpleObject {
     public void init(GL4 gl) {
         float a = 5;
         float []vertexData = {
-                0-a, 0, 0-a,
                 0+a, 0, 0-a,
                 0+a, 0, 0+a,
-                0-a, 0, 0+a
+                0-a, 0, 0-a,
+                0-a, 0, 0+a,
+                0-a, 0, 0-a,
+                0+a, 0, 0+a
         };
 
-        float []vertexColor = {
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f
+        float []vertexTexturePos = {
+                1, 0,
+                1, 1,
+                0, 0,
+                0, 1,
+                0, 0,
+                1, 1
         };
 
         int []indexArr = new int[] {
-                0, 1, 2, 3
+                0, 1, 2,
+                3, 4, 5
         };
 
         float[] vertexNormal = computeNormals(vertexData);
@@ -51,7 +56,7 @@ public class Floor extends SimpleObject {
         gl.glBindVertexArray(vertexArrayID);
 
         FloatBuffer vertexBuffer = Buffers.newDirectFloatBuffer(vertexData, 0);
-        FloatBuffer vertexColorBuffer = Buffers.newDirectFloatBuffer(vertexColor, 0);
+        FloatBuffer vertexTexturePosBuffer = Buffers.newDirectFloatBuffer(vertexTexturePos, 0);
         FloatBuffer vertexNormalBuffer = Buffers.newDirectFloatBuffer(vertexNormal, 0);
         IntBuffer vertexIndexBuffer = Buffers.newDirectIntBuffer(indexArr, 0);
 
@@ -67,9 +72,9 @@ public class Floor extends SimpleObject {
         gl.glGenBuffers(1, intBuffer);
         colorBufferID = intBuffer.get(0);
         gl.glBindBuffer(GL4.GL_ARRAY_BUFFER, colorBufferID);
-        gl.glBufferData(GL4.GL_ARRAY_BUFFER, vertexColor.length * Float.BYTES, vertexColorBuffer, GL4.GL_STATIC_DRAW);
+        gl.glBufferData(GL4.GL_ARRAY_BUFFER, vertexTexturePos.length * Float.BYTES, vertexTexturePosBuffer, GL4.GL_STATIC_DRAW);
         gl.glEnableVertexAttribArray(1);
-        gl.glVertexAttribPointer(1, 4, GL4.GL_FLOAT, false, 0, 0);
+        gl.glVertexAttribPointer(1, 2, GL4.GL_FLOAT, false, 0, 0);
 
         intBuffer.rewind();
         gl.glGenBuffers(1, intBuffer);
@@ -107,7 +112,7 @@ public class Floor extends SimpleObject {
         gl.glActiveTexture(GL4.GL_TEXTURE0);
         gl.glBindTexture(GL4.GL_TEXTURE_2D, textureID);
 
-        gl.glDrawElements(GL4.GL_QUADS, 4, GL4.GL_UNSIGNED_INT, 0);
+        gl.glDrawElements(GL4.GL_TRIANGLES, 6, GL4.GL_UNSIGNED_INT, 0);
 
         shader.unbindProgram(gl);
         gl.glBindVertexArray(0);
@@ -146,14 +151,14 @@ public class Floor extends SimpleObject {
 
     private float[] computeNormals(float[] vertexData){
         float[] normals = new float[vertexData.length];
-        for(int i=0; i<normals.length/12; i++){
-            Vector3f vec1 = makeVector(vertexData, i*12, i*12+3);
-            Vector3f vec2 = makeVector(vertexData, i*12, i*12+9);
+        for(int i=0; i<normals.length/18; i++){
+            Vector3f vec1 = makeVector(vertexData, i*18, i*18+3);
+            Vector3f vec2 = makeVector(vertexData, i*18, i*18+6);
             Vector3f normal = vec1.cross(vec2);
-            for(int j=0; j<3; j++){
-                normals[i*12 + j*3] = normal.x;
-                normals[i*12 + j*3 + 1] = normal.y;
-                normals[i*12 + j*3 + 2] = normal.z;
+            for(int j=0; j<6; j++){
+                normals[i*18 + j*3] = normal.x;
+                normals[i*18 + j*3 + 1] = normal.y;
+                normals[i*18 + j*3 + 2] = normal.z;
             }
         }
         return normals;
