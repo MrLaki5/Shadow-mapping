@@ -32,8 +32,13 @@ public class MainWindow implements GLEventListener, KeyListener {
     private List<SimpleObject> objectList = new ArrayList<>();
 
     public MainWindow(){
-        camera = new Camera(width, height);
-        GLProfile glp = GLProfile.getDefault();
+        //GLProfile glp = GLProfile.getDefault();
+        if(!GLProfile.isAvailable(GLProfile.GL4ES3)){
+            System.out.println("OpenGL4 not found!");
+            System.exit(2);
+            return;
+        }
+        GLProfile glp = GLProfile.getGL4ES3();
         System.out.println(glp.getGLImplBaseClassName());
         System.out.println(glp.getImplName());
         System.out.println(glp.getName());
@@ -44,6 +49,8 @@ public class MainWindow implements GLEventListener, KeyListener {
         caps.setDepthBits(24);
         caps.setDoubleBuffered(true);
         GLWindow window = GLWindow.create(caps);
+
+        camera = new Camera(width, height);
 
         animator = new FPSAnimator(window, 60, true);
 
@@ -65,7 +72,7 @@ public class MainWindow implements GLEventListener, KeyListener {
 
     @Override
     public void init(GLAutoDrawable drawable) {
-        GL4 gl = drawable.getGL().getGL4bc();
+        GL4 gl = drawable.getGL().getGL4();
         objectShader = new ObjectShader(gl);
 
         PNGLoader pngLoader = new PNGLoader();
@@ -111,7 +118,7 @@ public class MainWindow implements GLEventListener, KeyListener {
 
     @Override
     public void dispose(GLAutoDrawable drawable) {
-        GL4 gl = drawable.getGL().getGL4bc();
+        GL4 gl = drawable.getGL().getGL4();
         for(int i=0; i<objectList.size(); i++){
             objectList.get(i).destroy(gl);
         }
@@ -121,7 +128,7 @@ public class MainWindow implements GLEventListener, KeyListener {
 
     @Override
     public void display(GLAutoDrawable drawable) {
-        GL4 gl = drawable.getGL().getGL4bc();
+        GL4 gl = drawable.getGL().getGL4();
         gl.glClear(GL4.GL_COLOR_BUFFER_BIT | GL4.GL_DEPTH_BUFFER_BIT);
         for(int i=0; i<objectList.size(); i++){
             objectList.get(i).render(gl, camera);

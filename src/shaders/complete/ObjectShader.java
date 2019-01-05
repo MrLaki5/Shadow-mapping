@@ -2,10 +2,10 @@ package shaders.complete;
 
 import com.jogamp.opengl.GL4;
 
-public class ObjectShader extends CompleteShader{
+public class ObjectShader extends CompleteShader {
 
     public static final String vertexSrc =
-            "#version 430 core \n" +
+            "#version 410 core \n" +
             "layout(location = 0) in vec3 vertexPosition;\n" +
             "layout(location = 1) in vec2 vertexTexPos;\n" +
             "out vec2 interpolatedTexPos;\n" +
@@ -17,7 +17,7 @@ public class ObjectShader extends CompleteShader{
             "}\n";
 
     public static final String fragmentSrc =
-            "#version 430\n" +
+            "#version 410\n" +
             "in vec2 interpolatedTexPos;\n" +
             "out vec4 outColor;\n" +
             "uniform sampler2D texMap;\n" +

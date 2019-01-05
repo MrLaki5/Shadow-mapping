@@ -2,6 +2,7 @@ package image;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import de.matthiasmann.twl.utils.PNGDecoder;
 
@@ -43,20 +44,20 @@ public class PNGLoader {
 
     public boolean LoadGLTexture(GLAutoDrawable drawable, String textureName, int[] storage, int ind, int minFilter, int magFilter){
         boolean status = false;
-        GL2 gl = drawable.getGL().getGL2();
+        GL4 gl = drawable.getGL().getGL4();
         if(LoadPNG(textureName)){
             gl.glGenTextures(1, storage, ind);
-            gl.glBindTexture(GL2.GL_TEXTURE_2D, storage[ind]);
-            if(minFilter == GL.GL_NEAREST_MIPMAP_NEAREST || minFilter == GL.GL_NEAREST_MIPMAP_LINEAR
-                    || minFilter == GL.GL_LINEAR_MIPMAP_NEAREST  || minFilter == GL.GL_LINEAR_MIPMAP_LINEAR){
-                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL2.GL_GENERATE_MIPMAP, GL.GL_TRUE); // Ako je GL_TRUE, onda ce se sve mipmap slike ponovo izgenerisati ukliko se promeni tekstura nivoa 0
+            gl.glBindTexture(GL4.GL_TEXTURE_2D, storage[ind]);
+            if(minFilter == GL4.GL_NEAREST_MIPMAP_NEAREST || minFilter == GL4.GL_NEAREST_MIPMAP_LINEAR
+                    || minFilter == GL4.GL_LINEAR_MIPMAP_NEAREST  || minFilter == GL4.GL_LINEAR_MIPMAP_LINEAR){
+                gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL2.GL_GENERATE_MIPMAP, GL4.GL_TRUE); // Ako je GL_TRUE, onda ce se sve mipmap slike ponovo izgenerisati ukliko se promeni tekstura nivoa 0
             }
-            gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, imageWidth, imageHeight,
-                    0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, pixelData);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, minFilter);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, magFilter);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+            gl.glTexImage2D(GL4.GL_TEXTURE_2D, 0, GL4.GL_RGBA, imageWidth, imageHeight,
+                    0, GL4.GL_RGBA, GL4.GL_UNSIGNED_BYTE, pixelData);
+            gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MIN_FILTER, minFilter);
+            gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MAG_FILTER, magFilter);
+            gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_T, GL4.GL_REPEAT);
+            gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_S, GL4.GL_REPEAT);
             status = true;
         }
         return status;
