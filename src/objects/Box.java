@@ -3,6 +3,7 @@ package objects;
 import cameras.Camera;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL4;
+import lights.Light;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -48,7 +49,7 @@ public class Box extends SimpleObject{
     }
 
     @Override
-    public void render(GL4 gl, Camera c) {
+    public void render(GL4 gl, Camera camera, Light light) {
         if( shader == null ) {
             return;
         }
@@ -59,7 +60,7 @@ public class Box extends SimpleObject{
 
         int VPMatrixLoc = gl.glGetUniformLocation(shader.getProgramID(), "transform");
         int texMapLoc = gl.glGetUniformLocation(shader.getProgramID(), "texMap");
-        Matrix4f vpMat = c.getViewProjection();
+        Matrix4f vpMat = camera.getViewProjection();
         vpMat.mul(transform);
         vpMat.get(VPMatrixArr);
         gl.glUniformMatrix4fv(VPMatrixLoc, 1, false, VPMatrixArr, 0);

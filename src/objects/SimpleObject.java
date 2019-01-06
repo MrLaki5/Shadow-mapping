@@ -2,6 +2,7 @@ package objects;
 
 import cameras.Camera;
 import com.jogamp.opengl.GL4;
+import lights.Light;
 import org.joml.Matrix4f;
 import shaders.complete.CompleteShader;
 
@@ -10,7 +11,7 @@ public abstract class SimpleObject {
     protected Matrix4f transform;
     protected int textureID;
     public abstract void init(GL4 gl);
-    public abstract void render(GL4 gl, Camera c);
+    public abstract void render(GL4 gl, Camera camera, Light light);
     public abstract void destroy(GL4 gl);
     public abstract void update();
 
