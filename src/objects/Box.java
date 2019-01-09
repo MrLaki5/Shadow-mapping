@@ -86,10 +86,10 @@ public class Box extends SimpleObject{
         Matrix4f vpMat = light.getViewProjection();
         vpMat.mul(transform);
         vpMat.get(VPMatrixArr);
-        int VPMatrixLoc = gl.glGetUniformLocation(shader.getProgramID(), "transform");
+        int VPMatrixLoc = gl.glGetUniformLocation(shadowDepthShader.getProgramID(), "transform");
         gl.glUniformMatrix4fv(VPMatrixLoc, 1, false, VPMatrixArr, 0);
 
-        gl.glDrawElements(GL4.GL_TRIANGLES, 6, GL4.GL_UNSIGNED_INT, 0);
+        gl.glDrawElements(GL4.GL_TRIANGLES, 36, GL4.GL_UNSIGNED_INT, 0);
         shadowDepthShader.unbindProgram(gl);
         gl.glBindVertexArray(0);
     }

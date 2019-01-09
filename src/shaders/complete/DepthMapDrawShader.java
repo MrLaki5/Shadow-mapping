@@ -30,7 +30,7 @@ public class DepthMapDrawShader extends CompleteShader{
     public static final String geometrySrc = "";
 
     public DepthMapDrawShader(GL4 gl) {
-        super(gl, "Light depth shader", true, true, false, vertexSrc, fragmentSrc, geometrySrc);
+        super(gl, "Depth map draw shader", true, true, false, vertexSrc, fragmentSrc, geometrySrc);
     }
 
 
