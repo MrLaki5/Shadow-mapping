@@ -11,6 +11,7 @@ public abstract class SimpleObject {
     protected CompleteShader shadowDepthShader;
     protected Matrix4f transform;
     protected int textureID;
+    protected int textureDepthMapID;
     public abstract void init(GL4 gl);
     public abstract void render(GL4 gl, Camera camera, Light light);
     public abstract void renderLightPerspective(GL4 gl, Light light);
@@ -47,5 +48,9 @@ public abstract class SimpleObject {
 
     public void setShadowDepthShader(CompleteShader shadowDepthShader) {
         this.shadowDepthShader = shadowDepthShader;
+    }
+
+    public void setTextureDepthMapID(int textureDepthMapID) {
+        this.textureDepthMapID = textureDepthMapID;
     }
 }

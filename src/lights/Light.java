@@ -1,6 +1,8 @@
 package lights;
 
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class Light {
 
@@ -39,5 +41,15 @@ public class Light {
 
     public Matrix4f getViewProjection(){
         return new Matrix4f().mul(projection).mul(view);
+    }
+
+    public Vector3f GetPosition(){
+        Vector3f position = new Vector3f(-view.m30(), -view.m31(), -view.m32());
+        Matrix3f transform = new Matrix3f();
+        view.get3x3(transform);
+        transform.transpose();
+
+        transform.transform(position);
+        return position;
     }
 }

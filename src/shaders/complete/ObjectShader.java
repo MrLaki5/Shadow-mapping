@@ -8,19 +8,38 @@ public class ObjectShader extends CompleteShader {
             "#version 410 core \n" +
             "layout(location = 0) in vec3 vertexPosition;\n" +
             "layout(location = 1) in vec2 vertexTexPos;\n" +
-            "out vec2 interpolatedTexPos;\n" +
-            "uniform mat4 transform;\n" +
+            "layout(location = 2) in vec3 vertexNormal;\n"+
+            "out VS_OUT{\n" +
+            "vec3 FragPos;\n"+
+            "vec3 Normal;\n"+
+            "vec2 TexCords;\n"+
+            "vec4 FragPosLightSpace;\n"+
+            "} vs_out;\n"+
+            "uniform mat4 viewProjection;\n" +
+            "uniform mat4 model;\n"+
+            "uniform mat4 lightSpace;"+
             "void main()\n" +
             "{\n" +
-            "interpolatedTexPos = vertexTexPos;" +
-            "gl_Position = transform * vec4(vertexPosition, 1.0);\n" +
+            "vs_out.FragPos = vec3(model * vec4(vertexPosition, 1.0));\n"+
+            "vs_out.Normal = transpose(inverse(mat3(model))) * vertexNormal;\n"+
+            "vs_out.TexCords = vertexTexPos;\n"+
+            "vs_out.FragPosLightSpace = lightSpace * vec4(vs_out.FragPos, 1.0);\n"+
+            "gl_Position = viewProjection * model * vec4(vertexPosition, 1.0);\n"+
             "}\n";
 
     public static final String fragmentSrc =
             "#version 410\n" +
-            "in vec2 interpolatedTexPos;\n" +
-            "out vec4 outColor;\n" +
+            "in VS_OUT{\n" +
+            "vec3 FragPos;\n"+
+            "vec3 Normal;\n"+
+            "vec2 TexCords;\n"+
+            "vec4 FragPosLightSpace;\n"+
+            "} fs_in;\n"+
+            "out vec4 FragColor;\n" +
             "uniform sampler2D texMap;\n" +
+            "uniform sampler2D shadowMap;\n"+
+            "uniform vec3 lightPos;\n"+
+            "uniform vec3 viewPos;\n"+
             "void main()\n" +
             "{\n" +
             "outColor = texture(texMap, interpolatedTexPos).rgba;\n" +
