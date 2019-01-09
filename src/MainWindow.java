@@ -8,11 +8,11 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.FPSAnimator;
 import image.PNGLoader;
 import lights.Light;
-import objects.Box;
-import objects.Floor;
-import objects.LightSpace;
-import objects.SimpleObject;
+import mappings.DepthMaper;
+import objects.*;
 import org.joml.Matrix4f;
+import shaders.complete.DepthMapDrawShader;
+import shaders.complete.LightDepthShader;
 import shaders.complete.LightSpaceShader;
 import shaders.complete.ObjectShader;
 
@@ -35,6 +35,10 @@ public class MainWindow implements GLEventListener, KeyListener {
 
     private ObjectShader objectShader;
     private LightSpaceShader lightSpaceShader;
+    private LightDepthShader lightDepthShader;
+    private DepthMapDrawShader depthMapDrawShader;
+
+    private DepthMaper depthMaper;
 
     private List<SimpleObject> objectList = new ArrayList<>();
 
@@ -83,6 +87,8 @@ public class MainWindow implements GLEventListener, KeyListener {
         GL4 gl = drawable.getGL().getGL4();
         objectShader = new ObjectShader(gl);
         lightSpaceShader = new LightSpaceShader(gl);
+        lightDepthShader = new LightDepthShader(gl);
+        depthMapDrawShader = new DepthMapDrawShader(gl);
 
         PNGLoader pngLoader = new PNGLoader();
         pngLoader.LoadGLTexture(drawable, "img/wood.png", textureID, 0, GL.GL_LINEAR, GL.GL_LINEAR);
@@ -91,35 +97,47 @@ public class MainWindow implements GLEventListener, KeyListener {
         Box box1 = new Box();
         box1.setTextureID(textureID[0]);
         box1.setShaderProgram(objectShader);
+        box1.setShadowDepthShader(lightDepthShader);
         box1.setTransform(new Matrix4f().identity().translate(1, 0.5f ,2));
         objectList.add(box1);
 
         Box box2 = new Box();
         box2.setTextureID(textureID[0]);
         box2.setShaderProgram(objectShader);
+        box2.setShadowDepthShader(lightDepthShader);
         box2.setTransform(new Matrix4f().identity().translate(-1, 0.5f, 1).rotate((float)Math.toRadians(30), 0, 1, 0));
         objectList.add(box2);
 
         Box box3 = new Box();
         box3.setTextureID(textureID[0]);
         box3.setShaderProgram(objectShader);
+        box3.setShadowDepthShader(lightDepthShader);
         box3.setTransform(new Matrix4f().identity().scale(0.8f, 0.8f, 0.8f).translate(2.5f, 1.5f, -2.5f).rotate((float)Math.toRadians(25), 0, 1, 0).rotate((float)Math.toRadians(45), 1, 0, 1));
         objectList.add(box3);
 
         Box box4 = new Box();
         box4.setTextureID(textureID[0]);
         box4.setShaderProgram(objectShader);
+        box4.setShadowDepthShader(lightDepthShader);
         box4.setTransform(new Matrix4f().identity().translate(-2, 2f, -3).rotate((float)Math.toRadians(10), 0, 1, 0));
         objectList.add(box4);
 
         Floor floor = new Floor();
         floor.setTextureID(textureID[1]);
         floor.setShaderProgram(objectShader);
+        floor.setShadowDepthShader(lightDepthShader);
         objectList.add(floor);
 
         LightSpace lightSpace = new LightSpace();
         lightSpace.setShaderProgram(lightSpaceShader);
         objectList.add(lightSpace);
+
+        depthMaper = new DepthMaper(gl);
+
+        DepthMapBillboard depthMapBillboard = new DepthMapBillboard();
+        depthMapBillboard.setShaderProgram(depthMapDrawShader);
+        depthMapBillboard.setTextureID(depthMaper.getDepthMapTexture());
+        objectList.add(depthMapBillboard);
 
         gl.glClearColor(0.85f, 0.85f, 0.85f, 1f);
         gl.glEnable(GL4.GL_DEPTH_TEST);
@@ -137,12 +155,22 @@ public class MainWindow implements GLEventListener, KeyListener {
         }
         objectShader.deleteShader(gl);
         lightSpaceShader.deleteShader(gl);
+        lightDepthShader.deleteShader(gl);
+        depthMapDrawShader.deleteShader(gl);
         gl.glDeleteTextures(textureID.length, IntBuffer.wrap(textureID));
+        depthMaper.dispose(gl);
     }
 
     @Override
     public void display(GLAutoDrawable drawable) {
         GL4 gl = drawable.getGL().getGL4();
+        depthMaper.render(gl);
+        for(int i=0; i<objectList.size(); i++){
+            objectList.get(i).renderLightPerspective(gl, light);
+        }
+
+        gl.glBindFramebuffer(GL4.GL_FRAMEBUFFER, 0);
+        gl.glViewport(0, 0, (int)width, (int)height);
         gl.glClear(GL4.GL_COLOR_BUFFER_BIT | GL4.GL_DEPTH_BUFFER_BIT);
         for(int i=0; i<objectList.size(); i++){
             objectList.get(i).render(gl, camera, light);
