@@ -59,6 +59,7 @@ public class Box extends SimpleObject{
         shader.bindProgram(gl);
         gl.glBindVertexArray(vertexArrayID);
         gl.glActiveTexture(textureID);
+        gl.glActiveTexture(textureDepthMapID);
 
         int modelLoc = gl.glGetUniformLocation(shader.getProgramID(), "model");
         int viewProjectionLoc = gl.glGetUniformLocation(shader.getProgramID(), "viewProjection");

@@ -94,8 +94,11 @@ public class MainWindow implements GLEventListener, KeyListener {
         pngLoader.LoadGLTexture(drawable, "img/wood.png", textureID, 0, GL.GL_LINEAR, GL.GL_LINEAR);
         pngLoader.LoadGLTexture(drawable, "img/sand.png", textureID, 1, GL.GL_LINEAR, GL.GL_LINEAR);
 
+        depthMaper = new DepthMaper(gl);
+
         Box box1 = new Box();
         box1.setTextureID(textureID[0]);
+        box1.setTextureDepthMapID(depthMaper.getDepthMapTexture());
         box1.setShaderProgram(objectShader);
         box1.setShadowDepthShader(lightDepthShader);
         box1.setTransform(new Matrix4f().identity().translate(1, 0.5f ,2));
@@ -103,6 +106,7 @@ public class MainWindow implements GLEventListener, KeyListener {
 
         Box box2 = new Box();
         box2.setTextureID(textureID[0]);
+        box2.setTextureDepthMapID(depthMaper.getDepthMapTexture());
         box2.setShaderProgram(objectShader);
         box2.setShadowDepthShader(lightDepthShader);
         box2.setTransform(new Matrix4f().identity().translate(-1, 0.5f, 1).rotate((float)Math.toRadians(30), 0, 1, 0));
@@ -110,6 +114,7 @@ public class MainWindow implements GLEventListener, KeyListener {
 
         Box box3 = new Box();
         box3.setTextureID(textureID[0]);
+        box3.setTextureDepthMapID(depthMaper.getDepthMapTexture());
         box3.setShaderProgram(objectShader);
         box3.setShadowDepthShader(lightDepthShader);
         box3.setTransform(new Matrix4f().identity().scale(0.8f, 0.8f, 0.8f).translate(2.5f, 1.5f, -2.5f).rotate((float)Math.toRadians(25), 0, 1, 0).rotate((float)Math.toRadians(45), 1, 0, 1));
@@ -117,6 +122,7 @@ public class MainWindow implements GLEventListener, KeyListener {
 
         Box box4 = new Box();
         box4.setTextureID(textureID[0]);
+        box4.setTextureDepthMapID(depthMaper.getDepthMapTexture());
         box4.setShaderProgram(objectShader);
         box4.setShadowDepthShader(lightDepthShader);
         box4.setTransform(new Matrix4f().identity().translate(-2, 2f, -3).rotate((float)Math.toRadians(10), 0, 1, 0));
@@ -124,6 +130,7 @@ public class MainWindow implements GLEventListener, KeyListener {
 
         Floor floor = new Floor();
         floor.setTextureID(textureID[1]);
+        floor.setTextureDepthMapID(depthMaper.getDepthMapTexture());
         floor.setShaderProgram(objectShader);
         floor.setShadowDepthShader(lightDepthShader);
         objectList.add(floor);
@@ -131,8 +138,6 @@ public class MainWindow implements GLEventListener, KeyListener {
         LightSpace lightSpace = new LightSpace();
         lightSpace.setShaderProgram(lightSpaceShader);
         objectList.add(lightSpace);
-
-        depthMaper = new DepthMaper(gl);
 
         DepthMapBillboard depthMapBillboard = new DepthMapBillboard();
         depthMapBillboard.setShaderProgram(depthMapDrawShader);

@@ -18,6 +18,8 @@ public class Floor extends SimpleObject {
     private int normalBufferID;
     private int vertexIndexBufferID;
     private float VPMatrixArr[] = new float[16];
+    private float modelMatixArr[] = new float[16];
+    private float lightSpaceArr[] = new float[16];
 
     public Floor(){
         super();
@@ -27,12 +29,13 @@ public class Floor extends SimpleObject {
     public void init(GL4 gl) {
         float a = 5;
         float []vertexData = {
-                0+a, 0, 0-a,
                 0+a, 0, 0+a,
+                0+a, 0, 0-a,
+                0-a, 0, 0+a,
+
                 0-a, 0, 0-a,
                 0-a, 0, 0+a,
-                0-a, 0, 0-a,
-                0+a, 0, 0+a
+                0+a, 0, 0-a
         };
 
         float []vertexTexturePos = {
@@ -101,17 +104,38 @@ public class Floor extends SimpleObject {
         shader.bindProgram(gl);
         gl.glBindVertexArray(vertexArrayID);
         gl.glActiveTexture(textureID);
+        gl.glActiveTexture(textureDepthMapID);
 
-        int VPMatrixLoc = gl.glGetUniformLocation(shader.getProgramID(), "transform");
+        int modelLoc = gl.glGetUniformLocation(shader.getProgramID(), "model");
+        int viewProjectionLoc = gl.glGetUniformLocation(shader.getProgramID(), "viewProjection");
+        int lightSpaceLoc = gl.glGetUniformLocation(shader.getProgramID(), "lightSpace");
         int texMapLoc = gl.glGetUniformLocation(shader.getProgramID(), "texMap");
+        int depthLoc = gl.glGetUniformLocation(shader.getProgramID(), "shadowMap");
+        int lightPosLoc = gl.glGetUniformLocation(shader.getProgramID(), "lightPos");
+        int viewPosLoc = gl.glGetUniformLocation(shader.getProgramID(), "viewPos");
+
         Matrix4f vpMat = camera.getViewProjection();
-        vpMat.mul(transform);
+        Matrix4f lightSpaceMat = light.getViewProjection();
+
+        Vector3f lightPos = light.GetPosition();
+        Vector3f cameraPos = camera.GetPosition();
+
         vpMat.get(VPMatrixArr);
-        gl.glUniformMatrix4fv(VPMatrixLoc, 1, false, VPMatrixArr, 0);
+        transform.get(modelMatixArr);
+        lightSpaceMat.get(lightSpaceArr);
+
+        gl.glUniformMatrix4fv(viewProjectionLoc, 1, false, VPMatrixArr, 0);
+        gl.glUniformMatrix4fv(modelLoc, 1, false, modelMatixArr, 0);
+        gl.glUniformMatrix4fv(lightSpaceLoc, 1, false, lightSpaceArr, 0);
         gl.glUniform1i(texMapLoc, 0);
+        gl.glUniform1i(depthLoc, 1);
+        gl.glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+        gl.glUniform3f(viewPosLoc, cameraPos.x, cameraPos.y, cameraPos.z);
 
         gl.glActiveTexture(GL4.GL_TEXTURE0);
         gl.glBindTexture(GL4.GL_TEXTURE_2D, textureID);
+        gl.glActiveTexture(GL4.GL_TEXTURE1);
+        gl.glBindTexture(GL4.GL_TEXTURE_2D, textureDepthMapID);
 
         gl.glDrawElements(GL4.GL_TRIANGLES, 6, GL4.GL_UNSIGNED_INT, 0);
 
