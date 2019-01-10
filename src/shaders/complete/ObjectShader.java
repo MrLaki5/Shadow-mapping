@@ -40,7 +40,7 @@ public class ObjectShader extends CompleteShader {
             "uniform sampler2D shadowMap;\n"+
             "uniform vec3 lightPos;\n"+
             "uniform vec3 viewPos;\n"+
-            "float ShadowCalculation(vec4 fragPosLightSpace)\n"+
+            "float ShadowCalculation(vec4 fragPosLightSpace, vec3 fragNormal, vec3 lightDir)\n"+
             "{\n"+
             //Perform perspective divide
             "vec3 projCords = fragPosLightSpace.xyz / fragPosLightSpace.w;\n"+
@@ -51,8 +51,11 @@ public class ObjectShader extends CompleteShader {
             //Get depth of current fragment fragment from light's perspective
             "float currentDepth = projCords.z;\n"+
             //Check if current frag position is in shadow
-            "float bias = 0.005;\n"+
+            "float bias = max(0.05 * (1.0 - dot(fragNormal, lightDir)), 0.003);\n"+
             "float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;\n"+
+            "if(currentDepth > 1.0){\n"+
+            "shadow = 0.0;\n"+
+            "}\n"+
             "return shadow;\n"+
             "}\n"+
             "void main()\n" +
@@ -73,7 +76,7 @@ public class ObjectShader extends CompleteShader {
             "spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);\n"+
             "vec3 specular = spec * lightColor;\n"+
             //Calculate shadow
-            "float shadow = ShadowCalculation(fs_in.FragPosLightSpace);\n"+
+            "float shadow = ShadowCalculation(fs_in.FragPosLightSpace, normal, lightDir);\n"+
             "vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;\n"+
             "FragColor = vec4(lighting, 1.0);\n"+
             "}\n";

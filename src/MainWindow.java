@@ -170,9 +170,13 @@ public class MainWindow implements GLEventListener, KeyListener {
     public void display(GLAutoDrawable drawable) {
         GL4 gl = drawable.getGL().getGL4();
         depthMaper.render(gl);
+        //gl.glCullFace(GL4.GL_FRONT);
+
         for(int i=0; i<objectList.size(); i++){
             objectList.get(i).renderLightPerspective(gl, light);
         }
+
+        //gl.glCullFace(GL4.GL_BACK);
 
         gl.glBindFramebuffer(GL4.GL_FRAMEBUFFER, 0);
         gl.glViewport(0, 0, (int)width, (int)height);

@@ -5,6 +5,7 @@ import com.jogamp.opengl.GL4;
 import lights.Light;
 import org.joml.Matrix4f;
 
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 public class DepthMaper {
@@ -29,8 +30,15 @@ public class DepthMaper {
                 shadow_width, shadow_height, 0, GL4.GL_DEPTH_COMPONENT, GL4.GL_FLOAT, null);
         gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MIN_FILTER, GL4.GL_NEAREST);
         gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MAG_FILTER, GL4.GL_NEAREST);
-        gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_S, GL4.GL_REPEAT);
-        gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_T, GL4.GL_REPEAT);
+
+        gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_S, GL4.GL_CLAMP_TO_BORDER);
+        gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_T, GL4.GL_CLAMP_TO_BORDER);
+        float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        FloatBuffer tempBuff = FloatBuffer.wrap(borderColor);
+        gl.glTexParameterfv(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_BORDER_COLOR, tempBuff);
+
+        //gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_S, GL4.GL_REPEAT);
+        //gl.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_T, GL4.GL_REPEAT);
         //Bind created texture to created frame buffer
         gl.glBindFramebuffer(GL4.GL_FRAMEBUFFER, depthMapFrameBufferObjectID);
         gl.glFramebufferTexture2D(GL4.GL_FRAMEBUFFER, GL4.GL_DEPTH_ATTACHMENT, GL4.GL_TEXTURE_2D, depthMapTexture, 0);
