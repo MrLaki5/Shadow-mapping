@@ -51,7 +51,6 @@ public class ObjectShader extends CompleteShader {
             //Get depth of current fragment fragment from light's perspective
             "float currentDepth = projCords.z;\n"+
             //Check if current frag position is in shadow
-
             "float bias =  max(0.01 * (1.0 - dot(fragNormal, lightDir)), 0.005);\n"+
             "float shadow = 0.0;\n"+
             "vec2 texelSize = 1.0 / textureSize(shadowMap, 0);\n"+
@@ -88,7 +87,7 @@ public class ObjectShader extends CompleteShader {
             "vec3 specular = spec * lightColor;\n"+
             //Calculate shadow
             "float shadow = ShadowCalculation(fs_in.FragPosLightSpace, normal, lightDir);\n"+
-            "vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;\n"+
+            "vec3 lighting = ambient + ((1.0 - shadow) * (diffuse + specular)) * color;\n"+
             "FragColor = vec4(lighting, 1.0);\n"+
             "}\n";
 
