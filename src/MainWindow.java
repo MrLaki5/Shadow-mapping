@@ -150,6 +150,8 @@ public class MainWindow implements GLEventListener, KeyListener {
         for(int i=0; i<objectList.size(); i++){
             objectList.get(i).init(gl);
         }
+
+        gl.glEnable(GL4.GL_CULL_FACE);
     }
 
     @Override
@@ -172,7 +174,6 @@ public class MainWindow implements GLEventListener, KeyListener {
 
         depthMaper.render(gl);
 
-        gl.glEnable(GL4.GL_CULL_FACE);
         //gl.glCullFace(GL4.GL_FRONT);
         //gl.glCullFace(GL4.GL_CW);
 
@@ -184,7 +185,6 @@ public class MainWindow implements GLEventListener, KeyListener {
 
 
         gl.glBindFramebuffer(GL4.GL_FRAMEBUFFER, 0);
-
 
         gl.glViewport(0, 0, (int)width, (int)height);
         gl.glClear(GL4.GL_COLOR_BUFFER_BIT | GL4.GL_DEPTH_BUFFER_BIT);

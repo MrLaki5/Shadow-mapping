@@ -51,7 +51,7 @@ public class ObjectShader extends CompleteShader {
             //Get depth of current fragment fragment from light's perspective
             "float currentDepth = projCords.z;\n"+
             //Check if current frag position is in shadow
-            "float bias = max(0.05 * (1.0 - dot(fragNormal, lightDir)), 0.005);\n"+
+            "float bias =  max(0.01 * (1.0 - dot(fragNormal, lightDir)), 0.005);\n"+
             "float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;\n"+
             "if(currentDepth > 1.0){\n"+
             "shadow = 0.0;\n"+
