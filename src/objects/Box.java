@@ -104,6 +104,10 @@ public class Box extends SimpleObject{
             return;
         }
 
+        gl.glCullFace(GL4.GL_FRONT);
+        gl.glCullFace(GL4.GL_CW);
+
+
         shadowDepthShader.bindProgram(gl);
         gl.glBindVertexArray(vertexArrayID);
         Matrix4f vpMat = light.getViewProjection();
@@ -115,6 +119,9 @@ public class Box extends SimpleObject{
         gl.glDrawElements(GL4.GL_TRIANGLES, 36, GL4.GL_UNSIGNED_INT, 0);
         shadowDepthShader.unbindProgram(gl);
         gl.glBindVertexArray(0);
+
+
+        gl.glCullFace(GL4.GL_BACK);
     }
 
     @Override

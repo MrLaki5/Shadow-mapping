@@ -15,7 +15,7 @@ public class Light {
     public Light(){
         view  = new Matrix4f();
         projection = new Matrix4f();
-        projection.identity().ortho(-5, 5, -5, 5, -5f, 5);
+        projection.identity().ortho(-5, 5, -5, 5, 0.1f, 10);
         update(0);
     }
 
@@ -26,7 +26,7 @@ public class Light {
         else {
             angle = (angle + velocity) % 361;
         }
-        view.identity().translate(0, -2, 0)
+        view.identity().translate(0, -2, -5)
                 .rotate((float)Math.toRadians(35), 1, 0, 0)
                 .rotate((float)Math.toRadians(angle), 0, 1, 0);
     }
