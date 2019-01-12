@@ -1,4 +1,4 @@
-#Implementation of shadow mapping technique in OpenGL4 shaders:
+## Implementation of shadow mapping technique in OpenGL4 shaders:
 * One directional light, which can rotate around the sceen.
 * Visible frustum of light source.
 * Perspective camera which can zoom in and zoom out scene and rotate around it.
