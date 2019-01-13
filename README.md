@@ -5,3 +5,6 @@
 * Shadow acne removed with shadow bias and normal shadow bias value.
 * Aliasing of shadows removed with PCF method.
 * JOGL, java binding for the OpenGL API used. [Link](http://jogamp.org/ "JOGL")
+
+
+<img src="img/gitImg.png" width="500"/>
