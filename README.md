@@ -1,3 +1,4 @@
+[Download for Windows](https://github.com/MrLaki5/Shadow-mapping/releases/download/v1.0/shadow-mapping.zip)
 ## Implementation of shadow mapping technique in OpenGL4 shaders:
 * One directional light, which can rotate around the sceen.
 * Visible frustum of light source.
